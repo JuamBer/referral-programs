@@ -1,11 +1,110 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import CategorySection from "../components/CategorySection.astro";
+import { getReferrals, categories } from "../data/referrals";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// SEO Constants
+const TITLE = t("hero.title") + " - Juan";
+const DESCRIPTION = t("hero.subtitle");
+
+const localizedReferrals = getReferrals(lang);
+
+// Group referrals by category
+const referralsByCategory = categories.reduce(
+	(acc, category) => {
+		acc[category] = localizedReferrals.filter(
+			(r) => r.category === category,
+		);
+		return acc;
+	},
+	{} as Record<string, typeof localizedReferrals>,
+);
 ---
 
-<Layout>
-	<Welcome />
+<Layout title={TITLE} description={DESCRIPTION}>
+	<main class="min-h-screen bg-slate-50 p-4 md:p-8 lg:p-12">
+		<div class="max-w-7xl mx-auto">
+			<Hero />
+
+			<div id="referrals-container" class="space-y-4">
+				{
+					categories.map((category) => (
+						<div class="category-wrapper" data-category={category}>
+							<CategorySection
+								title={category}
+								referrals={referralsByCategory[category]}
+							/>
+						</div>
+					))
+				}
+			</div>
+
+			<!-- No results message -->
+			<div id="no-results" class="hidden text-center py-20">
+				<div class="text-6xl mb-4">🔍</div>
+				<h3 class="text-2xl font-bold text-slate-800 mb-2">
+					{t("noResults.title")}
+				</h3>
+				<p class="text-slate-500">
+					{t("noResults.subtitle")}
+				</p>
+			</div>
+		</div>
+	</main>
 </Layout>
+
+<script>
+	// Search functionality
+	const searchInput = document.getElementById(
+		"search-input",
+	) as HTMLInputElement;
+	const referralCards = document.querySelectorAll("article"); // Assuming cards are articles
+	const categoryWrappers = document.querySelectorAll(".category-wrapper");
+	const noResults = document.getElementById("no-results");
+
+	if (searchInput) {
+		searchInput.addEventListener("input", (e) => {
+			const searchTerm = (
+				e.target as HTMLInputElement
+			).value.toLowerCase();
+			let hasAnyResults = false;
+
+			// Filter cards
+			referralCards.forEach((card) => {
+				const cardText = (card.textContent || "").toLowerCase();
+				const matches = cardText.includes(searchTerm);
+
+				if (matches) {
+					card.style.display = "block"; // Or revert to flex/grid depending on layout, but default is block/flex
+					card.classList.remove("hidden");
+				} else {
+					card.style.display = "none";
+					card.classList.add("hidden");
+				}
+			});
+
+			// Check empty categories
+			categoryWrappers.forEach((wrapper) => {
+				const cardsInWrapper = wrapper.querySelectorAll(
+					"article:not(.hidden)",
+				);
+				if (cardsInWrapper.length === 0) {
+					wrapper.classList.add("hidden");
+				} else {
+					wrapper.classList.remove("hidden");
+					hasAnyResults = true;
+				}
+			});
+
+			// Show/Hide no results
+			if (noResults) {
+				noResults.classList.toggle("hidden", hasAnyResults);
+			}
+		});
+	}
+</script>

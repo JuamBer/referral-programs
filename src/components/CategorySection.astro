@@ -1,0 +1,36 @@
+---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import ReferralCard from "./ReferralCard.astro";
+
+interface Props {
+    title: string;
+    referrals: any[];
+}
+
+const { title, referrals } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// Translate titles
+const translatedTitle =
+    {
+        "Inversión Inmobiliaria": t("category.investment"),
+        NeoBancos: t("category.neobanks"),
+        Crypto: t("category.crypto"),
+        Otros: t("category.others"),
+    }[title] || title;
+---
+
+<section class="py-8 animate-fade-in">
+    <div class="flex items-center gap-3 mb-6">
+        <h2 class="text-2xl font-bold text-slate-900">{translatedTitle}</h2>
+        <span
+            class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded-full"
+            >{referrals.length}</span
+        >
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {referrals.map((referral) => <ReferralCard referral={referral} />)}
+    </div>
+</section>

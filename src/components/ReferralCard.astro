@@ -1,0 +1,209 @@
+---
+import { Image } from "astro:assets";
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+interface Props {
+    referral: {
+        name: string;
+        category: string;
+        description: string;
+        bonus: string;
+        requirements: string[];
+        color: string;
+        bgColor: string;
+        logo?: any;
+        code?: string;
+        link?: string;
+    };
+}
+
+const { referral } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// Translate categories
+const translatedCategory =
+    {
+        "Inversión Inmobiliaria": t("category.investment"),
+        NeoBancos: t("category.neobanks"),
+        Crypto: t("category.crypto"),
+        Otros: t("category.others"),
+    }[referral.category] || referral.category;
+---
+
+<article
+    class="relative group bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden"
+>
+    <div
+        class={`absolute top-0 right-0 w-24 h-24 bg-linear-to-bl ${referral.bgColor} to-transparent rounded-bl-full -mr-12 -mt-12 opacity-50 group-hover:scale-110 transition-transform`}
+    >
+    </div>
+
+    <div class="relative z-10">
+        <div class="flex items-center justify-between mb-4">
+            <div class="h-12 w-auto flex items-center">
+                {
+                    referral.logo && (
+                        <Image
+                            src={referral.logo}
+                            alt={`${referral.name} logo`}
+                            height={48}
+                            class="h-full w-auto object-contain"
+                        />
+                    )
+                }
+            </div>
+            <span
+                class={`px-3 py-1 rounded-full text-xs font-semibold ${referral.bgColor} ${referral.color}`}
+            >
+                {translatedCategory}
+            </span>
+        </div>
+
+        <h3 class="text-xl font-bold text-slate-800 mb-1">{referral.name}</h3>
+        <p class="text-sm text-slate-600 mb-4 h-10 line-clamp-2">
+            {referral.description}
+        </p>
+
+        <div class="bg-indigo-50 rounded-xl p-3 mb-4">
+            <p
+                class="text-xs font-semibold text-indigo-900 uppercase tracking-wide mb-1"
+            >
+                🎁 {t("referral.bonus")}
+            </p>
+            <p class="text-indigo-700 font-medium text-sm">{referral.bonus}</p>
+        </div>
+
+        {
+            referral.requirements && referral.requirements.length > 0 && (
+                <div class="mb-6">
+                    <p class="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-2">
+                        {t("referral.requirements")}
+                    </p>
+                    <ul class="space-y-1">
+                        {referral.requirements.map((req) => (
+                            <li class="flex items-start text-xs text-slate-600">
+                                <span class="mr-2 text-indigo-500">•</span>
+                                {req}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )
+        }
+
+        <div class="mt-auto space-y-3">
+            {
+                referral.code && (
+                    <div class="relative">
+                        <label class="text-xs text-slate-600 block mb-1">
+                            {t("referral.yourCode")}
+                        </label>
+                        <div class="flex items-center bg-slate-100 rounded-lg p-1 border border-slate-200">
+                            <code
+                                class="flex-1 font-mono text-slate-800 text-sm px-2 truncate"
+                                id={`code-${referral.name}`}
+                            >
+                                {referral.code}
+                            </code>
+                            <button
+                                class="copy-btn bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium py-2 px-3 rounded-md border border-slate-200 shadow-sm transition-colors flex items-center gap-1"
+                                data-code={referral.code}
+                            >
+                                <span>{t("referral.copyCode")}</span>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="12"
+                                    height="12"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="lucide lucide-copy"
+                                >
+                                    <>
+                                        <rect
+                                            width="14"
+                                            height="14"
+                                            x="8"
+                                            y="8"
+                                            rx="2"
+                                            ry="2"
+                                        />
+                                        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                                    </>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                )
+            }
+
+            {
+                referral.link && (
+                    <a
+                        href={referral.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="flex w-full text-center bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 px-4 rounded-xl transition-colors shadow-md hover:shadow-lg items-center justify-center gap-2 group/btn"
+                    >
+                        {t("referral.goToOffer")}
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="transition-transform group-hover/btn:translate-x-1"
+                        >
+                            <>
+                                <path d="M5 12h14" />
+                                <path d="m12 5 7 7-7 7" />
+                            </>
+                        </svg>
+                    </a>
+                )
+            }
+        </div>
+    </div>
+</article>
+
+<script>
+    // Simple copy to clipboard functionality
+    document.querySelectorAll(".copy-btn").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+            const code = btn.getAttribute("data-code");
+            if (!code) return;
+
+            try {
+                await navigator.clipboard.writeText(code);
+                const originalContent = btn.innerHTML;
+
+                // Detection for language can be complex in client script,
+                // so we use a simple check or just "!Copiado!" as it's common.
+                // Alternatively, we could data-attribute it.
+                const copiedText =
+                    document.documentElement.lang === "es"
+                        ? "¡Copiado!"
+                        : "Copied!";
+
+                // Show success state
+                btn.innerHTML = `<span class="text-emerald-600">${copiedText}</span>`;
+                btn.classList.add("bg-emerald-50", "border-emerald-200");
+
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.classList.remove("bg-emerald-50", "border-emerald-200");
+                }, 2000);
+            } catch (err) {
+                console.error("Failed to copy!", err);
+            }
+        });
+    });
+</script>

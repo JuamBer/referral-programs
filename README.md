@@ -1,46 +1,93 @@
-# Astro Starter Kit: Basics
+# 💸 Programas de Referidos - Premium Landing Page
 
-```sh
-npm create astro@latest -- --template basics
-```
+A modern, fast, and multi-language landing page built with **Astro 5** and **Tailwind CSS**. This project showcases various referral programs (Investment, NeoBanks, Crypto) with real-time search functionality and a premium user experience.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+---
 
-## 🚀 Project Structure
+## ✨ Features
 
-Inside of your Astro project, you'll see the following folders and files:
+- **🚀 Ultra-fast Performance**: Built with Astro for static site generation.
+- **🌍 Multi-language (i18n)**: Supports 7 languages:
+  - 🇪🇸 Spanish (Default)
+  - 🇺🇸 English
+  - 🇮🇹 Italian
+  - 🇳🇱 Dutch
+  - 🇩🇪 German
+  - 🇫🇷 French
+  - 🇵🇹 Portuguese
+- **🔍 Real-time Search**: Filter referral codes instantly by name, category, or description.
+- **📱 Premium Design**: Responsive layout with dark-mode hero section, glassmorphism effects, and smooth animations.
+- **📋 Easy Copy**: One-click copy for referral codes with visual feedback.
+- **📈 SEO Optimized**: Translated meta titles and descriptions for each language, sitemap integration, and semantic HTML.
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Astro](https://astro.build/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Icons**: [Lucide Icons](https://lucide.dev/) (SVG)
+- **Deployment**: GitHub Pages
+
+## 📂 Project Structure
 
 ```text
 /
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+├── src/
+│   ├── assets/         # Optimized images and logos
+│   ├── components/     # Reusable UI components (Hero, Card, etc.)
+│   ├── data/           # Referral data (referrals.ts)
+│   ├── i18n/           # Internationalization config and dictionaries
+│   ├── layouts/        # Base HTML layouts
+│   └── pages/          # Astro pages and dynamic language routes
+├── public/             # Static assets (robots.txt, favicon)
+├── astro.config.mjs    # Astro/Vite configuration
+└── package.json        # Dependencies and scripts
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## 🚀 Getting Started
 
-## 🧞 Commands
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/juamber/programas-referidos.git
+   cd programas-referidos
+   ```
 
-All commands are run from the root of the project, from a terminal:
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+3. **Run development server**:
+   ```bash
+   npm run dev
+   ```
 
-## 👀 Want to learn more?
+4. **Build for production**:
+   ```bash
+   npm run build
+   ```
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## ➕ How to add a new Referral Program
+
+Edit `src/data/referrals.ts` and add a new object to the `referrals` array. Make sure to provide translations for the `description`, `bonus`, and `requirements` fields:
+
+```typescript
+{
+    name: 'New Platform',
+    category: 'NeoBancos',
+    link: 'https://...',
+    bonus: {
+        es: 'Bonificación en español',
+        en: 'Bonus in English',
+        // ... other languages
+    },
+    // ... rest of fields
+}
+```
+
+## 📄 License
+
+This project is personal and created for educational/referral purposes. Feel free to use it as inspiration!
+
+---
+Made with 🤍 by [Juan](https://github.com/juamber)

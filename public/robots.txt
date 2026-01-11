@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://juamber.github.io/referral-programs/sitemap-index.xml

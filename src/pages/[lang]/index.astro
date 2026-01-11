@@ -1,0 +1,14 @@
+---
+import { ui } from "../../i18n/ui";
+import IndexPage from "../index.astro";
+
+export function getStaticPaths() {
+    return Object.keys(ui)
+        .filter((lang) => lang !== "es")
+        .map((lang) => ({
+            params: { lang },
+        }));
+}
+---
+
+<IndexPage />
